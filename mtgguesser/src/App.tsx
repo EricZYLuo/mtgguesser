@@ -5,17 +5,15 @@ import './App.css'
 
 import { StatsDisplay } from './StatsDisplay';
 import { GuessInput } from './GuessInput';
+import { CardDisplay, cardObj } from './CardDisplay';
+
 
 function App() {
 
   const [score, setScore] = useState(0); 
-  const [text, setText] = useState("");
   const [cardpool, setPool] = useState("all");
+  const [cardData, setData] = useState<cardObj | null>(null);
 
-
-
-
-  const key = "abc";
 
   function handleChangeType(e:SyntheticEvent) {
     setPool(e.target.value);
@@ -43,11 +41,22 @@ function App() {
           console.log(json.set_name);
           console.log(json.type_line);
           console.log(json.image_uris.art_crop);
+
+          setData({
+            name: json.name,
+            set: json.set,
+            set_name: json.set_name,
+            type_line: json.type_line,
+            art_url: json.image_uris.art_crop,
+            artist: json.artist
+          });
         }
       )
       .catch(error => console.error(error));
 
   }
+
+  useEffect(() => getCardData(), []);
 
   return (
     <>
@@ -60,11 +69,12 @@ function App() {
           <option value="modern">Modern</option>
         </select>
         <StatsDisplay score={score}></StatsDisplay>
-        <div>
+        
+        {cardData ? <CardDisplay cardData={cardData}></CardDisplay> : <p class="placeholder">Loading...</p>}
 
-        </div>
-
-        <GuessInput text={text} score={score} answer={key} setText={setText} setScore={setScore}></GuessInput>
+        <GuessInput guessType="name" score={score} data={cardData} setScore={setScore}></GuessInput>
+        <GuessInput guessType="set" score={score} data={cardData} setScore={setScore}></GuessInput>
+        <GuessInput guessType="typeline" score={score} data={cardData} setScore={setScore}></GuessInput>
 
         <button onClick={getCardData}>Test</button>
 

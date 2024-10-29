@@ -1,33 +1,64 @@
 import React, { SyntheticEvent, useState } from "react";
+import { cardObj } from "./CardDisplay";
 
 type GuessProps = {
-    text: string;
+    guessType: string;
     score: number;
-    answer: string;
-    setText: React.Dispatch<React.SetStateAction<string>>;
+    data: cardObj;
     setScore: React.Dispatch<React.SetStateAction<number>>;
 }
 
 
-export function GuessInput({text, score, answer, setText, setScore}: GuessProps) {
+export function GuessInput({guessType, score, data, setScore}: GuessProps) {
 
     const [isRevealed, setRevealed] = useState(false);
+    const [text, setText] = useState("");
 
     function handleSubmit(e: SyntheticEvent) { 
         e.preventDefault();
         if(!isRevealed) {
-            if(text === answer) {
-                setScore(score + 1);
-              }
-              else {
+            if(guessType === "name") {
+                if(text === data.name) {
+                    setScore(score + 3);
+                    setRevealed(true);
+                }
+                else {
                 console.log(text);
-              }
+                }
+            }
+            if(guessType === "set") {
+                if(text === data.set || text === data.set_name) {
+                    setScore(score + 1);
+                    setRevealed(true);
+                }
+                else {
+                console.log(text);
+                }
+            }
+            if(guessType === "typeline") {
+                if(text === data.type_line) {
+                    setScore(score + 1);
+                    setRevealed(true);
+                }
+                else {
+                console.log(text);
+                }
+            }
+            
         }
     }
     function handleHint(e:SyntheticEvent) {
         e.preventDefault();
         if(!isRevealed) {
-            setText(answer);
+            if(guessType === "name") {
+                setText(data.name);
+            }
+            if(guessType === "set") {
+                setText(data.set_name);
+            }
+            if(guessType === "typeline") {
+                setText(data.type_line);
+            }
             setRevealed(true);
         }
     }
