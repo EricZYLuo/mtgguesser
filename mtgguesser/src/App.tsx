@@ -40,16 +40,26 @@ function App() {
           console.log(json.name);
           console.log(json.set_name);
           console.log(json.type_line);
-          console.log(json.image_uris.art_crop);
+          let temp_art;
+          if(Object.hasOwn(json, 'card_faces')) {
+            console.log(json.card_faces[0].image_uris.art_crop);
+            temp_art = json.card_faces[0].image_uris.art_crop;
+          }
+          else {
+            console.log(json.image_uris.art_crop);
+            temp_art = json.image_uris.art_crop;
+          }
+          
 
           setData({
             name: json.name,
             set: json.set,
             set_name: json.set_name,
             type_line: json.type_line,
-            art_url: json.image_uris.art_crop,
+            art_url: temp_art,
             artist: json.artist
           });
+
         }
       )
       .catch(error => console.error(error));

@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { cardObj } from "./CardDisplay";
 
 type GuessProps = {
@@ -11,8 +11,9 @@ type GuessProps = {
 
 export function GuessInput({guessType, score, data, setScore}: GuessProps) {
 
-    const [isRevealed, setRevealed] = useState(false);
+
     const [text, setText] = useState("");
+    const [isRevealed, setRevealed] = useState(false);
 
     function handleSubmit(e: SyntheticEvent) { 
         e.preventDefault();
@@ -62,6 +63,11 @@ export function GuessInput({guessType, score, data, setScore}: GuessProps) {
             setRevealed(true);
         }
     }
+
+    useEffect(() => {
+        setRevealed(false);
+        setText("");
+    }, [data]);
 
     return (
         <form onSubmit={handleSubmit}>
