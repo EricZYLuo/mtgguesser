@@ -11,6 +11,8 @@ import { CardDisplay, cardObj } from './CardDisplay';
 function App() {
 
   const [score, setScore] = useState(0); 
+
+  const [completion, setCompletion] = useState(0);
   const [cardpool, setPool] = useState("all");
   const [cardData, setData] = useState<cardObj | null>(null);
 
@@ -26,10 +28,10 @@ function App() {
       searchLinkEnd = "";
     } 
     else if (cardpool === "standard") {
-      searchLinkEnd = "f%3Astandard";
+      searchLinkEnd = "?q=f%3Astandard";
     }
     else if (cardpool === "modern") {
-      searchLinkEnd = "f%3Amodern";
+      searchLinkEnd = "?q=f%3Amodern";
     }
 
     fetch(searchLinkBase+searchLinkEnd).then(
@@ -82,11 +84,11 @@ function App() {
         
         {cardData ? <CardDisplay cardData={cardData}></CardDisplay> : <p class="placeholder">Loading...</p>}
 
-        <GuessInput guessType="name" score={score} data={cardData} setScore={setScore}></GuessInput>
-        <GuessInput guessType="set" score={score} data={cardData} setScore={setScore}></GuessInput>
-        <GuessInput guessType="typeline" score={score} data={cardData} setScore={setScore}></GuessInput>
+        <GuessInput guessType="name" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
+        <GuessInput guessType="set" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
+        <GuessInput guessType="typeline" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
 
-        <button onClick={getCardData}>Test</button>
+        <button onClick={getCardData}>{completion === 3 ? "Next Card" : "Skip Card"}</button>
 
       </div>
 

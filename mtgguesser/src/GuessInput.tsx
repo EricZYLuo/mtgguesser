@@ -6,44 +6,53 @@ type GuessProps = {
     score: number;
     data: cardObj;
     setScore: React.Dispatch<React.SetStateAction<number>>;
+    completion: number;
+    setCompletion: React.Dispatch<React.SetStateAction<number>>
 }
 
 
-export function GuessInput({guessType, score, data, setScore}: GuessProps) {
+export function GuessInput({guessType, score, data, setScore, completion, setCompletion}: GuessProps) {
 
 
     const [text, setText] = useState("");
     const [isRevealed, setRevealed] = useState(false);
+    let labelText = "Guess ";
+    let scoreAmount = 1;
+    let answer = "";
+    if (guessType === "name") {
+        labelText += "card name:";
+        scoreAmount = 3;
+        answer = data.name;
+    }
+    else if (guessType === "set") {
+        labelText += "set:";
+        answer = data.set_name;
+    }
+    else if (guessType === "typeline") {
+        labelText += "type line:"
+        answer = data.type_line;
+    }
+
+    function checkSol(): boolean {
+        if(guessType === "set") {
+            return text === data.set || text === answer;
+        }
+        else {
+            return text === answer;
+        }
+        return false;
+    }
 
     function handleSubmit(e: SyntheticEvent) { 
         e.preventDefault();
         if(!isRevealed) {
-            if(guessType === "name") {
-                if(text === data.name) {
-                    setScore(score + 3);
-                    setRevealed(true);
-                }
-                else {
-                console.log(text);
-                }
+            if(checkSol()) {
+                setScore(score + scoreAmount);
+                setRevealed(true);
+                setCompletion(completion + 1);
             }
-            if(guessType === "set") {
-                if(text === data.set || text === data.set_name) {
-                    setScore(score + 1);
-                    setRevealed(true);
-                }
-                else {
+            else {
                 console.log(text);
-                }
-            }
-            if(guessType === "typeline") {
-                if(text === data.type_line) {
-                    setScore(score + 1);
-                    setRevealed(true);
-                }
-                else {
-                console.log(text);
-                }
             }
             
         }
@@ -51,16 +60,9 @@ export function GuessInput({guessType, score, data, setScore}: GuessProps) {
     function handleHint(e:SyntheticEvent) {
         e.preventDefault();
         if(!isRevealed) {
-            if(guessType === "name") {
-                setText(data.name);
-            }
-            if(guessType === "set") {
-                setText(data.set_name);
-            }
-            if(guessType === "typeline") {
-                setText(data.type_line);
-            }
+            setText(answer);
             setRevealed(true);
+            setCompletion(completion + 1);
         }
     }
 
@@ -71,7 +73,7 @@ export function GuessInput({guessType, score, data, setScore}: GuessProps) {
 
     return (
         <form onSubmit={handleSubmit}>
-          <label for="guessText">Guess: </label>
+          <label for="guessText"> {labelText} </label>
           <input id="guessText" name="guessText" type="text" disabled={isRevealed} value={text} onChange={(e) => setText(e.target.value)}></input>
           <input type="submit" disabled={isRevealed}></input>
           <button disabled={isRevealed} onClick={handleHint}>Reveal Hint</button>
