@@ -7,7 +7,7 @@ export function StatsDisplay({score}: StatsProp) {
     return (
     <>
     
-    <p>Score: {score}</p>
+    <p class="scoreDisplay">Score: {score}</p>
     
     </>)
 }

@@ -66,29 +66,38 @@ function App() {
       )
       .catch(error => console.error(error));
 
+      setCompletion(0);
+
   }
 
   useEffect(() => getCardData(), []);
 
   return (
     <>
-      <div>
-        <h1>MTG Guesser</h1>
-        <label for="typeSelect">Choose Type</label>
-        <select id="typeSelect" value={cardpool} onChange={handleChangeType}>
-          <option value="all">All Cards</option>
-          <option value="standard">Standard</option>
-          <option value="modern">Modern</option>
-        </select>
-        <StatsDisplay score={score}></StatsDisplay>
-        
+      <div class="appBody">
+        <div class="headerSection">
+          <div class="titleSection">
+            <h1>MTG Guesser</h1>
+            <StatsDisplay score={score}></StatsDisplay>
+          </div>
+          <div class="cardSelection">
+            <label for="typeSelect">Choose Type</label>
+            <select id="typeSelect" value={cardpool} onChange={handleChangeType}>
+              <option value="all">All Cards</option>
+              <option value="standard">Standard</option>
+              <option value="modern">Modern</option>
+            </select>
+          </div>
+        </div>
+
         {cardData ? <CardDisplay cardData={cardData}></CardDisplay> : <p class="placeholder">Loading...</p>}
-
-        <GuessInput guessType="name" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
-        <GuessInput guessType="set" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
-        <GuessInput guessType="typeline" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
-
-        <button onClick={getCardData}>{completion === 3 ? "Next Card" : "Skip Card"}</button>
+        <div class="guessInputs">
+          <GuessInput guessType="name" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
+          <GuessInput guessType="set" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
+          <GuessInput guessType="typeline" score={score} data={cardData} setScore={setScore} completion={completion} setCompletion={setCompletion}></GuessInput>
+        </div>
+        
+        <button class="skipButton" onClick={getCardData}>{completion === 3 ? "Next Card" : "Skip Card"}</button>
 
       </div>
 
